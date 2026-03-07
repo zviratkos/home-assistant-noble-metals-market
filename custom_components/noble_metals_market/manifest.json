@@ -1,0 +1,13 @@
+{
+  "domain": "noble_metals_market",
+  "name": "Noble Metals Market",
+  "codeowners": [
+    "@zviratkos"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/zviratkos/home-assistant-noble-metals-market",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/zviratkos/home-assistant-noble-metals-market",
+  "version": "1.0.0",
+  "requirements": []
+}

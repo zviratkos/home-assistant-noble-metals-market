@@ -1,0 +1,55 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Select currencies",
+        "description": "Choose which currencies to use. Available currencies are fetched live from the API ({count} found).",
+        "data": {
+          "currencies": "Currencies"
+        }
+      },
+      "symbols": {
+        "title": "Select instruments",
+        "description": "Choose which metal / unit / currency combinations to track.",
+        "data": {
+          "symbols": "Instruments"
+        }
+      },
+      "settings": {
+        "title": "Settings",
+        "data": {
+          "update_interval": "Update interval (seconds)",
+          "decimals": "Decimal places"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Noble Metals Market is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Select currencies",
+        "description": "Choose which currencies to use. Available currencies are fetched live from the API.",
+        "data": {
+          "currencies": "Currencies"
+        }
+      },
+      "symbols": {
+        "title": "Select instruments",
+        "description": "Choose which metal / unit / currency combinations to track.",
+        "data": {
+          "symbols": "Instruments"
+        }
+      },
+      "settings": {
+        "title": "Settings",
+        "data": {
+          "update_interval": "Update interval (seconds)",
+          "decimals": "Decimal places"
+        }
+      }
+    }
+  }
+}
