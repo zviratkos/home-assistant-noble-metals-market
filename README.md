@@ -17,3 +17,6 @@ Steps Kroky:
 ## Reload
 Settings → Devices and services → Noble Metals Market → Reload
 or: `service: noble_metals_market.reload`
+
+## License
+MIT
