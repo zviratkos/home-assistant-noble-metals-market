@@ -28,8 +28,9 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up sensors from config entry."""
-    symbols = entry.data[CONF_SYMBOLS]
-    decimals = entry.data[CONF_DECIMALS]
+    conf = {**entry.data, **entry.options}
+    symbols = conf[CONF_SYMBOLS]
+    decimals = conf[CONF_DECIMALS]
 
     sensors = []
     for symbol in symbols:
@@ -41,11 +42,12 @@ async def async_setup_entry(
         sensors.append(NobleMetalSensor(hass, entry, symbol, metal, unit, currency, decimals))
 
     hass.data[DOMAIN][entry.entry_id]["sensors"] = sensors
-    async_add_entities(sensors, update_before_add=False)
 
-    # Push initial state from already-fetched cache
+    # update_from_cache reads from already-fetched hass.data
     for sensor in sensors:
         sensor.update_from_cache()
+
+    async_add_entities(sensors, update_before_add=False)
 
 
 class NobleMetalSensor(SensorEntity):

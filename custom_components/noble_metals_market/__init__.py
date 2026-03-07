@@ -26,12 +26,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "unsub": None,
     }
 
-    update_interval = entry.data.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
+    # options override data when entry has been reconfigured via options flow
+    conf = {**entry.data, **entry.options}
+    update_interval = conf.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
 
-    # Initial fetch
+    # Initial fetch before sensors are created
     await _fetch_and_store(hass, entry.entry_id)
 
-    # Periodic scheduler
+    # Setup sensor platform — sensors register themselves into hass.data[DOMAIN][entry.entry_id]["sensors"]
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    # Reload entry when options change (e.g. added/removed symbols)
+    entry.async_on_unload(entry.add_update_listener(_async_update_listener))
+
+    # Periodic scheduler — sensors are now available
     async def _scheduled_update(_now=None):
         await _fetch_and_store(hass, entry.entry_id)
         for sensor in hass.data[DOMAIN][entry.entry_id].get("sensors", []):
@@ -41,8 +49,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data[DOMAIN][entry.entry_id]["unsub"] = async_track_time_interval(
         hass, _scheduled_update, timedelta(seconds=update_interval)
     )
-
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     # Reload service
     async def _handle_reload(_call: ServiceCall) -> None:
@@ -65,6 +71,11 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN].pop(entry.entry_id)
 
     return unloaded
+
+
+async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Reload entry when options are updated."""
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def _fetch_and_store(hass: HomeAssistant, entry_id: str) -> None:
